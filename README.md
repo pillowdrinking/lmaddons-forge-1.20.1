@@ -32,22 +32,15 @@ All options are bilingual (English + Chinese) with clear descriptions.
 
 ## Build / 构建
 
-bash
+```bash
 ./gradlew build
+```
 
 Output is in `build/libs/`.
+
 构建产物位于 `build/libs/`。
 
 ## License / 许可证
 
 All Rights Reserved.
 保留所有权利。
-
-
----
-
-## 双语风格保持一致
-
-你的配置注释已经是"英文在上、中文在下"的风格，README 照搬这个习惯，整个项目看起来非常统一专业。
-
-需要我帮你按这个模板写一个**完整可直接复制**的版本（包括占位符）吗？
