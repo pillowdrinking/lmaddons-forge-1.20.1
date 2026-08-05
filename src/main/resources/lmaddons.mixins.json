@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "net.pillow.lmaddons.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "lmaddons.refmap.json",
+  "mixins": [
+    "MixinSoulGreatSwordItem",
+    "MixinForgeEvents",
+    "MixinThrownPhantomDaggerEntity"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 0
+  },
+  "minVersion": "0.8"
+}

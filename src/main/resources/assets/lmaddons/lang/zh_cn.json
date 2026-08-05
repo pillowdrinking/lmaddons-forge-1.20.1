@@ -1,0 +1,5 @@
+{
+  "tooltip.lmaddons.soul_great_sword.parry.bypass": "可弹反所有伤害来源",
+  "tooltip.lmaddons.soul_great_sword.dagger.ray_range": "在按住Shift+右键1秒的同时看向%s格半径内的实体，释放追踪幻影匕首",
+  "tooltip.lmaddons.soul_great_sword.dagger.auto_target": "按住Shift+右键1秒，释放自动追踪%s格内实体的幻影匕首"
+}

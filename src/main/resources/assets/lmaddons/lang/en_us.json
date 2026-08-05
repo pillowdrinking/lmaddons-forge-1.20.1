@@ -1,0 +1,5 @@
+{
+  "tooltip.lmaddons.soul_great_sword.parry.bypass": "can parry all damage sources",
+  "tooltip.lmaddons.soul_great_sword.dagger.ray_range": "Hold Shift + Right click for 1s while looking at an entity in %s block radius to release homing phantom daggers",
+  "tooltip.lmaddons.soul_great_sword.dagger.auto_target": "Hold Shift + Right click for 1s to release phantom daggers that automatically track entities within %s blocks"
+}
