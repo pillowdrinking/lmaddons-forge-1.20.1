@@ -1,7 +1,6 @@
-```markdown
-# LM Addons
+# Legendary Monsters Addons(LM Addons)
 
-An addon mod for **Legendary Monsters**, enhancing the Soul Great Sword.
+An add-on mod for **Legendary Monsters**, enhancing the Soul Great Sword.
 
 **传奇生物（Legendary Monsters）的附属模组，强化灵魂巨剑。**
 
