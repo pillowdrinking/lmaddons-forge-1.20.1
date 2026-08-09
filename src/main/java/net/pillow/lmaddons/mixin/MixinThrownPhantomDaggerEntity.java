@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.pillow.lmaddons.config.LMAConfig;
+import net.pillow.lmaddons.util.LMAUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
@@ -25,8 +26,7 @@ public abstract class MixinThrownPhantomDaggerEntity {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/phys/Vec3;subtract(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;"
-            ),
-            remap = true
+            )
     )
     private Vec3 redirectSubtract(Vec3 returnPos, Vec3 pVec) {
         ThrownPhantomDaggerEntity self = (ThrownPhantomDaggerEntity) (Object) this;
@@ -95,10 +95,12 @@ public abstract class MixinThrownPhantomDaggerEntity {
         AABB box = p.getBoundingBox().inflate(range);
         List<LivingEntity> candidates = self.level().getEntitiesOfClass(
                 LivingEntity.class, box,
-                target -> target != p && target.isAlive()
+                target -> target != p
+                        && target.isAlive()
                         && !(target instanceof TamableAnimal pet && pet.getOwner() == p)
                         && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
                         && !target.isAlliedTo(p)
+                        && (!LMAConfig.DAGGER_ONLY_HOSTILE.get() || LMAUtil.isHostile(target))
         );
         if (candidates.isEmpty()) return;
 

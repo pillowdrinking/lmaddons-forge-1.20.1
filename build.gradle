@@ -115,7 +115,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 mixin {
     add sourceSets.main, 'lmaddons.refmap.json'
-    config 'lmaddons..json'
+    config 'lmaddons.mixins.json'
 
     debug.verbose = true
     debug.export = true

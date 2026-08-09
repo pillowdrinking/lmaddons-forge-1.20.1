@@ -20,7 +20,7 @@ license="All Rights Reserved"
 # The modid of the mod
 modId="lm_addons"
 # The version number of the mod
-version="0.4" #mandatory
+version="0.4.1hotfix" #mandatory
 # A display name for the mod
 displayName="Legendary Monsters Addons 1.20.1" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://docs.minecraftforge.net/en/latest/misc/updatechecker/

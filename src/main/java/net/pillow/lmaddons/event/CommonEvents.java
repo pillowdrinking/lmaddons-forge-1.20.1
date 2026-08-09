@@ -35,6 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.pillow.lmaddons.LMAddons;
 import net.pillow.lmaddons.config.LMAConfig;
+import net.pillow.lmaddons.util.LMAUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,10 +45,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Mod.EventBusSubscriber(modid = LMAddons.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
 
-    private static final Map<Integer, ThrownPhantomDaggerEntity> lmaddons$pendingDaggerHit = new ConcurrentHashMap<>();
     private static final Map<Integer, DaggerKillRecord> lmaddons$daggerKillCandidate = new ConcurrentHashMap<>();
+    private static final Map<Integer, PendingDaggerHit> lmaddons$pendingDaggerHit = new ConcurrentHashMap<>();
 
     private record DaggerKillRecord(ThrownPhantomDaggerEntity dagger, long tick) {}
+    private record PendingDaggerHit(ThrownPhantomDaggerEntity dagger, long tick) {}
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
@@ -56,9 +58,9 @@ public class CommonEvents {
         DamageSource source = event.getSource();
         if (world.isClientSide) return;
 
-        ThrownPhantomDaggerEntity dagger = lmaddons$pendingDaggerHit.remove(target.getId());
-        if (dagger != null) {
-            lmaddons$handleDaggerHit(dagger, target, event.getAmount());
+        PendingDaggerHit pending = lmaddons$pendingDaggerHit.remove(target.getId());
+        if (pending != null && world.getGameTime() - pending.tick() <= 0) {
+            lmaddons$handleDaggerHit(pending.dagger(), target, event.getAmount());
             return;
         }
 
@@ -111,10 +113,12 @@ public class CommonEvents {
         if (le.level().isClientSide) return;
 
         long endTick = le.getPersistentData().getLong("lmaddons:parry_invul_end");
-        if (endTick != 0 && le.level().getGameTime() < endTick) {
-            if (isDamageTypeBypass(event.getSource())) return;
-
-            event.setCanceled(true);
+        if (endTick != 0) {
+            if (le.tickCount >= endTick) {
+                le.getPersistentData().remove("lmaddons:parry_invul_end");
+            } else if (!isDamageTypeBypass(event.getSource())) {
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -159,7 +163,13 @@ public class CommonEvents {
         if (!(entityHit.getEntity() instanceof LivingEntity livingTarget)) return;
         if (!(dagger.getOwner() instanceof Player)) return;
 
-        lmaddons$pendingDaggerHit.put(livingTarget.getId(), dagger);
+        if (LMAConfig.DAGGER_ONLY_HOSTILE.get() && !LMAUtil.isHostile(livingTarget)) {
+            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+            return;
+        }
+
+        lmaddons$pendingDaggerHit.put(livingTarget.getId(),
+                new PendingDaggerHit(dagger, livingTarget.level().getGameTime()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -208,15 +218,8 @@ public class CommonEvents {
             p.heal(healAmount);
         }
 
-        lmaddons$daggerKillCandidate.put(target.getId(), new DaggerKillRecord(dagger, target.level().getGameTime()));
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onCosmeticEntityAttack(LivingAttackEvent event) {
-        Entity attackerDE = event.getSource().getDirectEntity();
-        if (attackerDE != null && attackerDE.getPersistentData().getBoolean("lmaddons:cosmetic")) {
-            event.setCanceled(true);
-        }
+        lmaddons$daggerKillCandidate.put(target.getId(),
+                new DaggerKillRecord(dagger, target.level().getGameTime()));
     }
 
     @SubscribeEvent
@@ -224,9 +227,10 @@ public class CommonEvents {
         LivingEntity target = event.getEntity();
         DaggerKillRecord record = lmaddons$daggerKillCandidate.remove(target.getId());
         if (record == null) return;
-        if (target.level().getGameTime() - record.tick() > 1) return;
-        if (!(record.dagger().getOwner() instanceof Player p)) return;
 
+        if (target.level().getGameTime() - record.tick() != 0) return;
+
+        if (!(record.dagger().getOwner() instanceof Player p)) return;
         lmaddons$spawnDaggerKillEffect(target, p);
     }
 

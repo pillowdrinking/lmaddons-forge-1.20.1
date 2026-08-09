@@ -30,8 +30,7 @@ public abstract class MixinForgeEvents {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z"
-            ),
-            remap = true
+            )
     )
     private static boolean redirectBypassCheck(DamageSource source, TagKey<DamageType> pDamageTypeKey) {
         if (LMAConfig.PARRY_IGNORE_BYPASS_TAGS.get()) {
@@ -56,7 +55,7 @@ public abstract class MixinForgeEvents {
         int invulTicks = LMAConfig.PARRY_INVUL_TICKS.get();
         if (invulTicks > 0) {
             p.getPersistentData().putLong("lmaddons:parry_invul_end",
-                    p.level().getGameTime() + invulTicks);
+                    p.tickCount + invulTicks);
         }
 
         int perfectWin = LMAConfig.PARRY_PERFECT_WINDOW_TICKS.get();

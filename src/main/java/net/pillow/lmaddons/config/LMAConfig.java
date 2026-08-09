@@ -37,6 +37,7 @@ public class LMAConfig {
     public static final ForgeConfigSpec.DoubleValue DAGGER_LIFESTEAL_MAXHP_RATIO;
     public static final ForgeConfigSpec.IntValue DAGGER_RAY_COUNT;
     public static final ForgeConfigSpec.IntValue DAGGER_AUTO_TARGET_COUNT;
+    public static final ForgeConfigSpec.BooleanValue DAGGER_ONLY_HOSTILE;
 
     public static final ForgeConfigSpec COMMON_SPEC;
 
@@ -259,6 +260,13 @@ public class LMAConfig {
                         "自动追踪模式下幻影匕首的数量。默认 6。"
                 )
                 .defineInRange("autoTargetCount", 6, 1, Integer.MAX_VALUE);
+
+        DAGGER_ONLY_HOSTILE = b
+                .comment(
+                        "If enabled, auto‑targeting dagger will only lock onto and damage hostile mobs (Monster / MobCategory.MONSTER). Default true.",
+                        "若开启，自动追踪匕首只会锁定并伤害敌对生物（Monster 类或生物类别为 MONSTER）。默认开启。"
+                )
+                .define("onlyHostile", true);
 
         b.pop();
 
