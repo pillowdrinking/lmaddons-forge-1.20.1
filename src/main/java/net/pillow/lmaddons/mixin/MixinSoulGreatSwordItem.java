@@ -5,7 +5,6 @@ import net.miauczel.legendary_monsters.entity.ModEntities;
 import net.miauczel.legendary_monsters.item.custom.SoulGreatSwordItem;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
@@ -155,13 +154,13 @@ public abstract class MixinSoulGreatSwordItem {
     @Inject(method = "onUseTick", at = @At("HEAD"), remap = false)
     private void loadParryTimeUsed(Level level, LivingEntity entity, ItemStack stack,
                                    int remainingUseDuration, CallbackInfo ci) {
-        loadParryTimeUsedFromData(entity);
+        lmaddons$loadParryTimeUsedFromData(entity);
     }
 
     @Inject(method = "releaseUsing", at = @At("HEAD"), remap = false)
     private void loadParryTimeUsedRelease(ItemStack pStack, Level level, LivingEntity pLivingEntity,
                                           int pTimeCharged, CallbackInfo ci) {
-        loadParryTimeUsedFromData(pLivingEntity);
+        lmaddons$loadParryTimeUsedFromData(pLivingEntity);
     }
 
     @ModifyArg(
@@ -208,7 +207,7 @@ public abstract class MixinSoulGreatSwordItem {
     }
 
     @Unique
-    private void loadParryTimeUsedFromData(LivingEntity le) {
+    private void lmaddons$loadParryTimeUsedFromData(LivingEntity le) {
         if (le instanceof Player p) {
             var tag = p.getPersistentData();
             if (tag.contains("lmaddons:parry_time_used")) {
