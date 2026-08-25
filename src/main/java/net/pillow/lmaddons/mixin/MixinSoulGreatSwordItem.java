@@ -218,21 +218,4 @@ public abstract class MixinSoulGreatSwordItem {
             }
         }
     }
-
-    @Inject(
-            method = "raytraceEntities",
-            at = @At("RETURN"),
-            cancellable = true,
-            remap = false
-    )
-    private void filterRaytraceTargets(Player player, Level world, Vec3 from, Vec3 _to,
-                                       boolean ignoreBlockWithoutBoundingBox,
-                                       CallbackInfoReturnable<AnnihilationBeamEntity.LaserbeamHitResult> cir) {
-        AnnihilationBeamEntity.LaserbeamHitResult result = cir.getReturnValue();
-        if (result == null) return;
-
-        result.entities.removeIf(entity -> LMAUtil.shouldIgnoreTarget(entity, player));
-
-        cir.setReturnValue(result);
-    }
 }

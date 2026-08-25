@@ -163,12 +163,12 @@ public class CommonEvents {
         if (!(entityHit.getEntity() instanceof LivingEntity target)) return;
         if (!(dagger.getOwner() instanceof Player p)) return;
 
-        if (LMAUtil.shouldIgnoreTarget(target, p)) {
-            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
-            return;
-        }
-
         if (LMAConfig.DAGGER_AUTO_TARGET.get()) {
+            if (LMAUtil.shouldIgnoreTarget(target, p)) {
+                event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                return;
+            }
+
             if (LMAUtil.isExcluded(target)) {
                 event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
                 return;
