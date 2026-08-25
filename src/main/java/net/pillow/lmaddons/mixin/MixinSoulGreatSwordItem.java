@@ -1,5 +1,6 @@
 package net.pillow.lmaddons.mixin;
 
+import net.miauczel.legendary_monsters.entity.AnimatedMonster.Projectile.AnnihilationBeamEntity;
 import net.miauczel.legendary_monsters.entity.AnimatedMonster.Projectile.ThrownPhantomDaggerEntity;
 import net.miauczel.legendary_monsters.entity.ModEntities;
 import net.miauczel.legendary_monsters.item.custom.SoulGreatSwordItem;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.pillow.lmaddons.config.LMAConfig;
 import net.pillow.lmaddons.util.LMAUtil;
 import org.spongepowered.asm.mixin.Mixin;
@@ -215,5 +217,22 @@ public abstract class MixinSoulGreatSwordItem {
                 tag.remove("lmaddons:parry_time_used");
             }
         }
+    }
+
+    @Inject(
+            method = "raytraceEntities",
+            at = @At("RETURN"),
+            cancellable = true,
+            remap = false
+    )
+    private void filterRaytraceTargets(Player player, Level world, Vec3 from, Vec3 _to,
+                                       boolean ignoreBlockWithoutBoundingBox,
+                                       CallbackInfoReturnable<AnnihilationBeamEntity.LaserbeamHitResult> cir) {
+        AnnihilationBeamEntity.LaserbeamHitResult result = cir.getReturnValue();
+        if (result == null) return;
+
+        result.entities.removeIf(entity -> LMAUtil.shouldIgnoreTarget(entity, player));
+
+        cir.setReturnValue(result);
     }
 }

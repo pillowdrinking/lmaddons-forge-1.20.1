@@ -151,9 +151,9 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation fg.deobf("curse.maven:legendary-monsters-944035:8444425")
+    implementation fg.deobf("curse.maven:legendary-monsters-944035:8715502")
 
-    implementation fg.deobf("curse.maven:legendary-delicacies-1626621:8521860")
+    implementation fg.deobf("curse.maven:legendary-delicacies-1626621:8722791")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
