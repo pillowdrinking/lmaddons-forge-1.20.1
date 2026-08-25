@@ -88,35 +88,32 @@ public abstract class MixinSoulGreatSwordItem {
     }
 
     @Inject(method = "spreadDaggers", at = @At("HEAD"), cancellable = true, remap = false)
-    private void injectSpreadDaggers(Player player, int count, CallbackInfo ci) {
+    private void injectSpreadDaggers(Player p, int count, CallbackInfo ci) {
         if (LMAConfig.DAGGER_AUTO_TARGET.get()) {
             ci.cancel();
-            autoSpreadDaggers(player, LMAConfig.DAGGER_AUTO_TARGET_COUNT.get());
+            lmaddons$autoSpreadDaggers(p, LMAConfig.DAGGER_AUTO_TARGET_COUNT.get());
         }
     }
 
     @Unique
-    private void autoSpreadDaggers(Player player, int count) {
-        Level world = player.level();
+    private void lmaddons$autoSpreadDaggers(Player p, int count) {
+        Level world = p.level();
         double range = LMAConfig.DAGGER_AUTO_TARGET_RANGE.get();
 
-        AABB box = player.getBoundingBox().inflate(range);
+        AABB box = p.getBoundingBox().inflate(range);
         List<LivingEntity> targets = world.getEntitiesOfClass(
                 LivingEntity.class, box,
-                target -> target != player
-                        && target.isAlive()
-                        && !(target instanceof TamableAnimal && ((TamableAnimal) target).getOwner() == player)
-                        && !(target instanceof Player p && (p.isCreative() || p.isSpectator()))
-                        && !target.isAlliedTo(player)
+                target -> !LMAUtil.shouldIgnoreTarget(target, p)
+                        && !LMAUtil.isExcluded(target)
                         && (!LMAConfig.DAGGER_ONLY_HOSTILE.get() || LMAUtil.isHostile(target))
         );
-        targets.sort(Comparator.comparingDouble(player::distanceToSqr));
+        targets.sort(Comparator.comparingDouble(p::distanceToSqr));
 
         for (int i = 0; i < count; i++) {
             float throwAngle = (float) i * (float) Math.PI / (float) (count / 2);
-            double sx = player.getX() + Mth.cos(throwAngle);
-            double sy = player.getY() + (double) player.getBbHeight() * 0.2;
-            double sz = player.getZ() + Mth.sin(throwAngle);
+            double sx = p.getX() + Mth.cos(throwAngle);
+            double sy = p.getY() + (double) p.getBbHeight() * 0.2;
+            double sz = p.getZ() + Mth.sin(throwAngle);
 
             double vx = Mth.cos(throwAngle);
             double vz = Mth.sin(throwAngle);
@@ -129,10 +126,10 @@ public abstract class MixinSoulGreatSwordItem {
                 projectile.setReturnEntity(targets.get(i % targets.size()));
             }
 
-            projectile.setOwner(player);
+            projectile.setOwner(p);
             projectile.setDamage(8.0F);
             projectile.setReturnTick(10);
-            projectile.moveTo(sx, sy, sz, (float) i * 11.25F, player.getXRot());
+            projectile.moveTo(sx, sy, sz, (float) i * 11.25F, p.getXRot());
             projectile.shoot(vx, 0.0F, vz, 0.7F, 1.0F);
             world.addFreshEntity(projectile);
         }

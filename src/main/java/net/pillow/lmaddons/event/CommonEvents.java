@@ -160,16 +160,26 @@ public class CommonEvents {
         if (projectile.level().isClientSide) return;
         if (!(projectile instanceof ThrownPhantomDaggerEntity dagger)) return;
         if (!(event.getRayTraceResult() instanceof EntityHitResult entityHit)) return;
-        if (!(entityHit.getEntity() instanceof LivingEntity livingTarget)) return;
-        if (!(dagger.getOwner() instanceof Player)) return;
+        if (!(entityHit.getEntity() instanceof LivingEntity target)) return;
+        if (!(dagger.getOwner() instanceof Player p)) return;
 
-        if (LMAConfig.DAGGER_ONLY_HOSTILE.get() && !LMAUtil.isHostile(livingTarget)) {
+        if (LMAUtil.shouldIgnoreTarget(target, p)) {
             event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
             return;
         }
 
-        lmaddons$pendingDaggerHit.put(livingTarget.getId(),
-                new PendingDaggerHit(dagger, livingTarget.level().getGameTime()));
+        if (LMAUtil.isExcluded(target)) {
+            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+            return;
+        }
+
+        if (LMAConfig.DAGGER_ONLY_HOSTILE.get() && !LMAUtil.isHostile(target)) {
+            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+            return;
+        }
+
+        lmaddons$pendingDaggerHit.put(target.getId(),
+                new PendingDaggerHit(dagger, target.level().getGameTime()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

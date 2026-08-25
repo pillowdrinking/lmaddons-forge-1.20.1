@@ -95,11 +95,8 @@ public abstract class MixinThrownPhantomDaggerEntity {
         AABB box = p.getBoundingBox().inflate(range);
         List<LivingEntity> candidates = self.level().getEntitiesOfClass(
                 LivingEntity.class, box,
-                target -> target != p
-                        && target.isAlive()
-                        && !(target instanceof TamableAnimal pet && pet.getOwner() == p)
-                        && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
-                        && !target.isAlliedTo(p)
+                target -> !LMAUtil.shouldIgnoreTarget(target, p)
+                        && !LMAUtil.isExcluded(target)
                         && (!LMAConfig.DAGGER_ONLY_HOSTILE.get() || LMAUtil.isHostile(target))
         );
         if (candidates.isEmpty()) return;

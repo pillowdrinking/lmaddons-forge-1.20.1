@@ -38,6 +38,7 @@ public class LMAConfig {
     public static final ForgeConfigSpec.IntValue DAGGER_RAY_COUNT;
     public static final ForgeConfigSpec.IntValue DAGGER_AUTO_TARGET_COUNT;
     public static final ForgeConfigSpec.BooleanValue DAGGER_ONLY_HOSTILE;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DAGGER_EXCLUDED_ENTITIES;
 
     public static final ForgeConfigSpec COMMON_SPEC;
 
@@ -267,6 +268,22 @@ public class LMAConfig {
                         "若开启，自动追踪匕首只会锁定并伤害敌对生物（Monster 类或生物类别为 MONSTER）。默认开启。"
                 )
                 .define("onlyHostile", true);
+
+        DAGGER_EXCLUDED_ENTITIES = b
+                .comment(
+                        "Entities that daggers will never target, even when onlyHostile is disabled.",
+                        "Format: 'modid:entity_id', e.g. 'minecraft:villager'.",
+                        "Default: villager and Touhou Little Maid's maid.",
+                        "即使关闭仅敌对模式，匕首也不会攻击列表中的生物。",
+                        "格式：'模组id:实体注册名'，例如 'minecraft:villager'。",
+                        "默认：村民和车万女仆的女仆。"
+                )
+                .defineList("excludedEntities", () -> {
+                    List<String> defaults = new ArrayList<>();
+                    defaults.add("minecraft:villager");
+                    defaults.add("touhou_little_maid:maid");
+                    return defaults;
+                }, obj -> obj instanceof String);
 
         b.pop();
 
