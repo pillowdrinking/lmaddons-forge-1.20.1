@@ -271,7 +271,7 @@ public class LMAConfig {
 
         DAGGER_EXCLUDED_ENTITIES = b
                 .comment(
-                        "Entities that daggers will never target, even when onlyHostile is disabled.",
+                        "Entities that auto-targeting daggers will never target, even when onlyHostile is disabled.",
                         "Format: 'modid:entity_id', e.g. 'minecraft:villager'.",
                         "Default: villager and Touhou Little Maid's maid.",
                         "即使关闭仅敌对模式，自动追踪匕首也不会攻击列表中的生物。",
