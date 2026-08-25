@@ -274,7 +274,7 @@ public class LMAConfig {
                         "Entities that daggers will never target, even when onlyHostile is disabled.",
                         "Format: 'modid:entity_id', e.g. 'minecraft:villager'.",
                         "Default: villager and Touhou Little Maid's maid.",
-                        "即使关闭仅敌对模式，匕首也不会攻击列表中的生物。",
+                        "即使关闭仅敌对模式，自动追踪匕首也不会攻击列表中的生物。",
                         "格式：'模组id:实体注册名'，例如 'minecraft:villager'。",
                         "默认：村民和车万女仆的女仆。"
                 )

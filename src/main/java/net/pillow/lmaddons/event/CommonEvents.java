@@ -168,14 +168,16 @@ public class CommonEvents {
             return;
         }
 
-        if (LMAUtil.isExcluded(target)) {
-            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
-            return;
-        }
+        if (LMAConfig.DAGGER_AUTO_TARGET.get()) {
+            if (LMAUtil.isExcluded(target)) {
+                event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                return;
+            }
 
-        if (LMAConfig.DAGGER_ONLY_HOSTILE.get() && !LMAUtil.isHostile(target)) {
-            event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
-            return;
+            if (LMAConfig.DAGGER_ONLY_HOSTILE.get() && !LMAUtil.isHostile(target)) {
+                event.setImpactResult(ProjectileImpactEvent.ImpactResult.SKIP_ENTITY);
+                return;
+            }
         }
 
         lmaddons$pendingDaggerHit.put(target.getId(),

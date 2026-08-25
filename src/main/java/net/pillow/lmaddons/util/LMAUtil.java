@@ -21,8 +21,7 @@ public class LMAUtil {
         if (!target.isAlive()) return true;
         if (target instanceof Player p && (p.isCreative() || p.isSpectator())) return true;
         if (target instanceof TamableAnimal pet && pet.getOwner() == owner) return true;
-        if (target.isAlliedTo(owner)) return true;
-        return false;
+        return target.isAlliedTo(owner);
     }
 
     public static boolean isExcluded(LivingEntity target) {
