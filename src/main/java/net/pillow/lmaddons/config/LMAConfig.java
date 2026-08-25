@@ -264,7 +264,7 @@ public class LMAConfig {
 
         DAGGER_ONLY_HOSTILE = b
                 .comment(
-                        "If enabled, auto‑targeting dagger will only lock onto and damage hostile mobs (Monster / MobCategory.MONSTER). Default true.",
+                        "If enabled, auto‑targeting daggers will only lock onto and damage hostile mobs (Monster / MobCategory.MONSTER). Default true.",
                         "若开启，自动追踪匕首只会锁定并伤害敌对生物（Monster 类或生物类别为 MONSTER）。默认开启。"
                 )
                 .define("onlyHostile", true);
